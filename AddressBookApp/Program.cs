@@ -10,6 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddScoped <AddressBookBL> ();
 builder.Services.AddScoped<IAddressBookBL,AddressBookBL>();
 builder.Services.AddScoped<IAddressBookRL,AddressBookRL>();
 
