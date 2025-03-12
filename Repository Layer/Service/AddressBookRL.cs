@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Repository_Layer.Context;
 using Repository_Layer.Entity;
 using Repository_Layer.Interface;
+using Model_Layer.Model;
+using Model_Layer.DTO;
 
 namespace Repository_Layer.Service
 {
@@ -47,6 +49,7 @@ namespace Repository_Layer.Service
             {
 
                 existingContact.Name = updatedContact.Name;
+                existingContact.Email = updatedContact.Email;
                 existingContact.Address = updatedContact.Address;
 
                 addressBookDbContext.SaveChanges();

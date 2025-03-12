@@ -1,5 +1,9 @@
+using AutoMapper;
 using Business_Layer.Service;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using Model_Layer.DTO;
+using Model_Layer.Model;
 using Repository_Layer.Entity;
 
 namespace AddressBookApp.Controllers
@@ -9,10 +13,14 @@ namespace AddressBookApp.Controllers
     public class AddressBookAppController : ControllerBase
     {
         private readonly AddressBookBL _addressBookBL;
+        private readonly IMapper _mapper;
+        private readonly IValidator<AddressBookDTO> _validator;
 
-        public AddressBookAppController(AddressBookBL addressBookBL)
+        public AddressBookAppController(AddressBookBL addressBookBL, IMapper mapper, IValidator<AddressBookDTO> validator)
         {
             _addressBookBL = addressBookBL;
+            _mapper = mapper;
+            _validator = validator;
         }
 
         // GET: Fetch all contacts
@@ -36,14 +44,19 @@ namespace AddressBookApp.Controllers
 
         // POST: Add a new contact
         [HttpPost]
-        public ActionResult<AddressBookEntity> AddContact([FromBody] AddressBookEntity contact)
+        public ActionResult<AddressBookDTO> AddContact([FromBody] AddressBookDTO contactDTO)
         {
-            var createdContact = _addressBookBL.AddContact(contact);
-            if (createdContact == null)
+            var validationResult = _validator.Validate(contactDTO);
+            if (!validationResult.IsValid)
             {
-                return BadRequest("Invalid contact details.");
+                return BadRequest(validationResult.Errors);
             }
-            return CreatedAtAction(nameof(GetContactById), new { id = createdContact.Id }, createdContact);
+            
+            var contactEntity = _mapper.Map<AddressBookEntity>(contactDTO);
+            var createdContact = _addressBookBL.AddContact(contactEntity);
+            var createdContactDTO = _mapper.Map<AddressBookDTO>(createdContact);
+
+            return CreatedAtAction(nameof(GetContactById), new { id = createdContactDTO.Id }, createdContactDTO);
         }
 
         // PUT: Update contact

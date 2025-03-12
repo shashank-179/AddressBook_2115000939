@@ -7,6 +7,7 @@ using Business_Layer.Interface;
 using Repository_Layer.Entity;
 using Repository_Layer.Service;
 using Repository_Layer.Interface;
+using Model_Layer.Model;
 
 namespace Business_Layer.Service
 {
@@ -47,5 +48,7 @@ namespace Business_Layer.Service
         {
             return _addressBookRL.DeleteContact(id);
         }
+
+       
     }
 }

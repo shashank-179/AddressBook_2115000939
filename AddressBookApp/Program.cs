@@ -5,6 +5,10 @@ using Repository_Layer.Interface;
 using Repository_Layer.Context;
 using Repository_Layer.Entity;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper;
+using FluentValidation.AspNetCore;
+using Business_Layer.Validation;
+using FluentValidation;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -13,6 +17,13 @@ builder.Services.AddControllers();
 builder.Services.AddScoped <AddressBookBL> ();
 builder.Services.AddScoped<IAddressBookBL,AddressBookBL>();
 builder.Services.AddScoped<IAddressBookRL,AddressBookRL>();
+builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
+builder.Services.AddFluentValidationAutoValidation()
+                .AddFluentValidationClientsideAdapters();
+
+
+builder.Services.AddValidatorsFromAssemblyContaining<AddressBookValidator>();
+
 
 
 var connectionString = builder.Configuration.GetConnectionString("SqlConnection");
