@@ -1,4 +1,5 @@
 using AutoMapper;
+using Business_Layer.Interface;
 using Business_Layer.Service;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
@@ -12,11 +13,11 @@ namespace AddressBookApp.Controllers
     [Route("api/addressbook")]
     public class AddressBookAppController : ControllerBase
     {
-        private readonly AddressBookBL _addressBookBL;
+        private readonly IAddressBookBL _addressBookBL;
         private readonly IMapper _mapper;
         private readonly IValidator<AddressBookDTO> _validator;
 
-        public AddressBookAppController(AddressBookBL addressBookBL, IMapper mapper, IValidator<AddressBookDTO> validator)
+        public AddressBookAppController(IAddressBookBL addressBookBL, IMapper mapper, IValidator<AddressBookDTO> validator)
         {
             _addressBookBL = addressBookBL;
             _mapper = mapper;
