@@ -8,6 +8,8 @@ using Repository_Layer.Entity;
 using Repository_Layer.Interface;
 using Model_Layer.Model;
 using Model_Layer.DTO;
+using Microsoft.EntityFrameworkCore;
+using Repository_Layer.Hashing;
 
 namespace Repository_Layer.Service
 {
@@ -18,6 +20,38 @@ namespace Repository_Layer.Service
         public AddressBookRL(AddressBookDbContext addressBookDbContext)
         {
             this.addressBookDbContext=  addressBookDbContext;
+        }
+
+        public void Register(UserModel userModel)
+        {
+            // Map UserModel to UserEntity before saving
+            var userEntity = new UserEntity
+            {
+                Name = userModel.Name,
+                Email = userModel.Email,
+                PasswordHash = userModel.PasswordHash
+            };
+
+            addressBookDbContext.Users.Add(userEntity);
+            addressBookDbContext.SaveChanges();
+        }
+        public UserModel? GetUserByEmail(string email)
+        {
+            var userEntity = addressBookDbContext.Users.FirstOrDefault(u => u.Email == email);
+            if (userEntity == null) return null;
+
+            return new UserModel
+            {
+                Id = userEntity.Id,
+                Name = userEntity.Name,
+                Email = userEntity.Email,
+                PasswordHash = userEntity.PasswordHash
+            };
+        }
+
+        public UserEntity? GetUserEntityByEmail(string email)
+        {
+            return addressBookDbContext.Users.FirstOrDefault(u => u.Email == email);
         }
 
         // Get all contacts
@@ -70,5 +104,7 @@ namespace Repository_Layer.Service
             }
             return false;
         }
+
+
     }
 }

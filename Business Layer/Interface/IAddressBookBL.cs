@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Model_Layer.DTO;
 using Repository_Layer.Entity;
 
 namespace Business_Layer.Interface
 {
     public interface IAddressBookBL
     {
+        public string Register(UserDTO userDto);
+        public string? Login(UserDTO userDto);
         public List<AddressBookEntity> GetAllContacts();
         public AddressBookEntity GetContactById(int id);
         public AddressBookEntity AddContact(AddressBookEntity contact);

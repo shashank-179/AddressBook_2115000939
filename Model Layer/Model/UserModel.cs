@@ -8,18 +8,16 @@ using System.Threading.Tasks;
 
 namespace Model_Layer.Model
 {
-    public class AddressBookEntry
+    public class UserModel
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-
         [Required]
-        public string Name { get; set; }
-
-        [Required, EmailAddress]
-        public string Email { get; set; }
+        public string Name { get; set; } = string.Empty;
+        [Required] 
+        public string Email { get; set; } = string.Empty;
         [Required]
-        public string Address { get; set; }
+        public byte[] PasswordHash { get; set; } 
     }
+
 }

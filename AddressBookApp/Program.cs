@@ -23,6 +23,8 @@ builder.Services.AddFluentValidationAutoValidation()
 
 
 builder.Services.AddValidatorsFromAssemblyContaining<AddressBookValidator>();
+builder.Services.AddSingleton(new JwtService("ThisIsA32CharLongSecretKey!123456455465869708yyuvhhuvcgguugyft7uyfu78"));
+
 
 
 

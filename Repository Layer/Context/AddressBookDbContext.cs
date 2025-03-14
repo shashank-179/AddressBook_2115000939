@@ -15,6 +15,6 @@ namespace Repository_Layer.Context
         public AddressBookDbContext(DbContextOptions<AddressBookDbContext> options) : base(options) { }
 
         public virtual DbSet<AddressBookEntity> AddressBook { get; set; }
-
+        public virtual DbSet<UserEntity>Users { get; set; }
     }
 }

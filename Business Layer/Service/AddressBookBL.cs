@@ -8,16 +8,45 @@ using Repository_Layer.Entity;
 using Repository_Layer.Service;
 using Repository_Layer.Interface;
 using Model_Layer.Model;
+using Model_Layer.DTO;
+using Repository_Layer.Hashing;
 
 namespace Business_Layer.Service
 {
     public class AddressBookBL:IAddressBookBL
     {
         private readonly IAddressBookRL _addressBookRL;
+        private readonly JwtService jwtService;
 
-        public AddressBookBL(IAddressBookRL addressBookRL)
+        public AddressBookBL(IAddressBookRL addressBookRL, JwtService jwtService)
         {
             _addressBookRL = addressBookRL;
+            this.jwtService = jwtService;
+        }
+
+        public string Register(UserDTO userDto)
+        {
+            if (_addressBookRL.GetUserByEmail(userDto.Email) != null)
+                return "User already exists";
+
+            var user = new UserModel
+            {
+                Name = userDto.Name,
+                Email = userDto.Email,
+                PasswordHash = PasswordHashing.HashPassword(userDto.Password)
+            };
+
+            _addressBookRL.Register(user);
+            return "User registered successfully";
+        }
+
+        public string? Login(UserDTO userDto)
+        {
+            var userEntity = _addressBookRL.GetUserEntityByEmail(userDto.Email);
+            if (userEntity == null || !PasswordHashing.VerifyPassword(userDto.Password, userEntity.PasswordHash))
+                return null; // Invalid login
+
+            return jwtService.GenerateToken(userEntity);
         }
 
         public List<AddressBookEntity> GetAllContacts()
