@@ -16,10 +16,12 @@ namespace Repository_Layer.Service
     public class AddressBookRL: IAddressBookRL
     {
         private readonly AddressBookDbContext addressBookDbContext;
+        private readonly RedisCacheService redisCache;
 
-        public AddressBookRL(AddressBookDbContext addressBookDbContext)
+        public AddressBookRL(AddressBookDbContext addressBookDbContext, RedisCacheService redisCache)
         {
             this.addressBookDbContext=  addressBookDbContext;
+            this.redisCache= redisCache;
         }
 
         public void Register(UserModel userModel)
@@ -86,21 +88,50 @@ namespace Repository_Layer.Service
         // Get all contacts
         public List<AddressBookEntity> GetAllContacts()
         {
-            return addressBookDbContext.AddressBook.ToList();
+            string cacheKey = "addressBook:allContacts";
+
+            // ✅ Check if data is in Redis cache
+            var cachedContacts = redisCache.Get<List<AddressBookEntity>>(cacheKey);
+            if (cachedContacts != null)
+                return cachedContacts;
+
+            // ✅ Fetch from database and store in Redis
+            var contacts = addressBookDbContext.AddressBook.ToList();
+            redisCache.Set(cacheKey, contacts);
+
+            return contacts;
         }
 
         // Get contact by ID
-        public AddressBookEntity GetContactById(int id)
+        public AddressBookEntity? GetContactById(int id)
         {
-            return addressBookDbContext.AddressBook.FirstOrDefault(c => c.Id == id);
+            string cacheKey = $"addressBook:contact:{id}";
+
+            // ✅ Check if contact is cached
+            var cachedContact = redisCache.Get<AddressBookEntity>(cacheKey);
+            if (cachedContact != null)
+                return cachedContact;
+
+            // ✅ Fetch from database and store in Redis
+            var contact = addressBookDbContext.AddressBook.FirstOrDefault(c => c.Id == id);
+            if (contact != null)
+            {
+                redisCache.Set(cacheKey, contact);
+            }
+
+            return contact;
         }
+
 
         // Add a new contact
         public AddressBookEntity AddContact(AddressBookEntity contact)
         {
-            contact.Id = 0;
             addressBookDbContext.AddressBook.Add(contact);
             addressBookDbContext.SaveChanges();
+
+            // ❌ Remove outdated cache after adding new contact
+            redisCache.Remove("addressBook:allContacts");
+
             return contact;
         }
 

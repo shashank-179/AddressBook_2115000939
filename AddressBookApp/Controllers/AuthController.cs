@@ -1,16 +1,19 @@
 ﻿using Business_Layer.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Model_Layer.DTO;
+using Repository_Layer.Service;
 
 [Route("api/auth")]
 [ApiController]
 public class AuthController : ControllerBase
 {
     private readonly IAddressBookBL _addressBookBL;
+    private readonly RedisCacheService redisCache;
 
-    public AuthController(IAddressBookBL _addressBookBL)
+    public AuthController(IAddressBookBL _addressBookBL, RedisCacheService redisCache)
     {
         this._addressBookBL = _addressBookBL;
+        this.redisCache = redisCache;
     }
 
     [HttpPost("register")]
