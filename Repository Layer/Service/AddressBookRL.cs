@@ -54,6 +54,35 @@ namespace Repository_Layer.Service
             return addressBookDbContext.Users.FirstOrDefault(u => u.Email == email);
         }
 
+        public void UpdateUser(UserModel userModel)
+        {
+            var userEntity = addressBookDbContext.Users.FirstOrDefault(u => u.Id == userModel.Id);
+            if (userEntity == null) return;
+
+            userEntity.PasswordHash = userModel.PasswordHash;
+            userEntity.ResetToken = userModel.ResetToken;
+            userEntity.ResetTokenExpires = userModel.ResetTokenExpires;
+
+            addressBookDbContext.Users.Update(userEntity);
+            addressBookDbContext.SaveChanges();
+        }
+
+        public UserModel? GetUserByToken(string token)
+        {
+            var userEntity = addressBookDbContext.Users.FirstOrDefault(u => u.ResetToken == token);
+            if (userEntity == null) return null;
+
+            return new UserModel
+            {
+                Id = userEntity.Id,
+                Name = userEntity.Name,
+                Email = userEntity.Email,
+                PasswordHash = userEntity.PasswordHash,
+                ResetToken = userEntity.ResetToken,
+                ResetTokenExpires = userEntity.ResetTokenExpires
+            };
+        }
+
         // Get all contacts
         public List<AddressBookEntity> GetAllContacts()
         {

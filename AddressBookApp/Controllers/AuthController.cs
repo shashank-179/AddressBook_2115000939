@@ -32,4 +32,18 @@ public class AuthController : ControllerBase
 
         return Ok(new { token });
     }
+
+    [HttpPost("forgot-password")]
+    public IActionResult ForgotPassword([FromBody] ForgotPasswordDTO request)
+    {
+        var result = _addressBookBL.ForgotPassword(request.Email);
+        return result == "User not found" ? NotFound(new { message = result }) : Ok(new { message = result });
+    }
+
+    [HttpPost("reset-password")]
+    public IActionResult ResetPassword([FromBody] ResetPasswordDTO resetPasswordDto)
+    {
+        var result = _addressBookBL.ResetPassword(resetPasswordDto.Token, resetPasswordDto.NewPassword);
+        return result == "Invalid or expired token" ? BadRequest(new { message = result }) : Ok(new { message = result });
+    }
 }

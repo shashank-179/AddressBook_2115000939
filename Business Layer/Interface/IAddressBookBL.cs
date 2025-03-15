@@ -12,6 +12,9 @@ namespace Business_Layer.Interface
     {
         public string Register(UserDTO userDto);
         public string? Login(UserDTO userDto);
+        public string ForgotPassword(string email);
+        public string ResetPassword(string token, string newPassword);
+        public void SendResetEmail(string email, string resetToken);
         public List<AddressBookEntity> GetAllContacts();
         public AddressBookEntity GetContactById(int id);
         public AddressBookEntity AddContact(AddressBookEntity contact);

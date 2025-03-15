@@ -13,6 +13,8 @@ namespace Repository_Layer.Interface
         public void Register(UserModel userModel);
         public UserEntity? GetUserEntityByEmail(string email);
         public UserModel? GetUserByEmail(string email);
+        public void UpdateUser(UserModel userModel);
+        public UserModel? GetUserByToken(string token);
         public List<AddressBookEntity> GetAllContacts();
         public AddressBookEntity GetContactById(int id);
         public AddressBookEntity AddContact(AddressBookEntity contact);

@@ -10,6 +10,10 @@ using Repository_Layer.Interface;
 using Model_Layer.Model;
 using Model_Layer.DTO;
 using Repository_Layer.Hashing;
+using System.Security.Cryptography;
+using System.Net.Mail;
+using System.Net;
+
 
 namespace Business_Layer.Service
 {
@@ -48,6 +52,62 @@ namespace Business_Layer.Service
 
             return jwtService.GenerateToken(userEntity);
         }
+
+        public string ForgotPassword(string email)
+        {
+            var user = _addressBookRL.GetUserByEmail(email);
+            if (user == null)
+                return "User not found";
+
+            // Generate a secure reset token
+            user.ResetToken = Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));
+            user.ResetTokenExpires = DateTime.UtcNow.AddHours(1); // Token valid for 1 hour
+
+            _addressBookRL.UpdateUser(user);
+
+            SendResetEmail(user.Email, user.ResetToken);
+
+            return "Password reset email sent successfully";
+        }
+
+        public string ResetPassword(string token, string newPassword)
+        {
+            var user = _addressBookRL.GetUserByToken(token); // Find user by token
+
+            if (user == null || user.ResetTokenExpires < DateTime.UtcNow)
+                return "Invalid or expired token";
+
+            // Update the user's password
+            user.PasswordHash = PasswordHashing.HashPassword(newPassword);
+            user.ResetToken = null; // Clear the token after successful reset
+            user.ResetTokenExpires = null;
+
+            _addressBookRL.UpdateUser(user);
+            return "Password reset successfully";
+        }
+
+        public void SendResetEmail(string email, string resetToken)
+        {
+            string resetLink = $"https://yourdomain.com/reset-password?token={resetToken}";
+            string subject = "Password Reset Request";
+            string body = $"Click the link below to reset your password:\n{resetLink}";
+
+            using (SmtpClient client = new SmtpClient("smtp.gmail.com"))
+            {
+                client.Port = 587;
+                client.Credentials = new NetworkCredential("shashank17903@gmail.com", "xash rloe uvgj qbjg");
+                client.EnableSsl = true;
+
+                MailMessage mail = new MailMessage();
+                mail.From = new MailAddress("shashank17903@gmail.com");
+                mail.To.Add(email);
+                mail.Subject = subject;
+                mail.Body = body;
+
+                client.Send(mail);
+            }
+        }
+
 
         public List<AddressBookEntity> GetAllContacts()
         {

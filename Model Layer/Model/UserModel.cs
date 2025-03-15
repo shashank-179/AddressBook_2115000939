@@ -17,7 +17,10 @@ namespace Model_Layer.Model
         [Required] 
         public string Email { get; set; } = string.Empty;
         [Required]
-        public byte[] PasswordHash { get; set; } 
+        public byte[] PasswordHash { get; set; }
+        public string? ResetToken { get; set; } // Token for password reset
+        public DateTime? ResetTokenExpires { get; set; } // Expiration time for reset token
+
     }
 
 }
