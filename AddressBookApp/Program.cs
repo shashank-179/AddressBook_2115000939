@@ -9,6 +9,7 @@ using AutoMapper;
 using FluentValidation.AspNetCore;
 using Business_Layer.Validation;
 using FluentValidation;
+using Microsoft.OpenApi.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -25,6 +26,50 @@ builder.Services.AddFluentValidationAutoValidation()
 builder.Services.AddValidatorsFromAssemblyContaining<AddressBookValidator>();
 builder.Services.AddSingleton(new JwtService("ThisIsA32CharLongSecretKey!123456455465869708yyuvhhuvcgguugyft7uyfu78"));
 builder.Services.AddSingleton<RedisCacheService>();
+builder.Services.AddSingleton<RabbitMQService>();
+builder.Services.AddHostedService<RabbitMQConsumer>();
+builder.Services.AddSingleton<RabbitMQPublisher>();
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "AddressBook API",
+        Version = "v1",
+        Description = "API for managing contacts and users in AddressBookApp",
+        Contact = new OpenApiContact
+        {
+            Name = "Support",
+            Email = "support@example.com"
+        }
+    });
+
+    // Enable Authorization in Swagger UI
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Description = "Enter 'Bearer <token>'",
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "Bearer"
+    });
+
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+});
 
 
 
@@ -37,7 +82,9 @@ builder.Services.AddDbContext<AddressBookDbContext>(options =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-
+app.UseSwagger();
+app.UseSwaggerUI();
+app.UseAuthentication();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

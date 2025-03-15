@@ -11,6 +11,7 @@
           "AutoMapper.Extensions.Microsoft.DependencyInjection": "6.0.0",
           "FluentValidation.AspNetCore": "11.3.0",
           "Microsoft.AspNetCore.Authentication.JwtBearer": "6.0.36",
+          "RabbitMQ.Client": "6.2.2",
           "StackExchange.Redis": "2.8.31"
         },
         "runtime": {
@@ -401,6 +402,18 @@
           }
         }
       },
+      "RabbitMQ.Client/6.2.2": {
+        "dependencies": {
+          "System.Memory": "4.5.4",
+          "System.Threading.Channels": "4.7.1"
+        },
+        "runtime": {
+          "lib/netstandard2.0/RabbitMQ.Client.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.2.2.0"
+          }
+        }
+      },
       "StackExchange.Redis/2.8.31": {
         "dependencies": {
           "Microsoft.Extensions.Logging.Abstractions": "6.0.4",
@@ -489,6 +502,7 @@
         }
       },
       "System.IO.Pipelines/5.0.1": {},
+      "System.Memory/4.5.4": {},
       "System.Reflection/4.3.0": {
         "dependencies": {
           "Microsoft.NETCore.Platforms": "3.1.9",
@@ -594,6 +608,7 @@
           "Microsoft.NETCore.Platforms": "3.1.9"
         }
       },
+      "System.Threading.Channels/4.7.1": {},
       "System.Threading.Tasks/4.3.0": {
         "dependencies": {
           "Microsoft.NETCore.Platforms": "3.1.9",
@@ -896,6 +911,13 @@
       "path": "pipelines.sockets.unofficial/2.2.8",
       "hashPath": "pipelines.sockets.unofficial.2.2.8.nupkg.sha512"
     },
+    "RabbitMQ.Client/6.2.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-+tJSgE+rQXgLvOxWvOxdZ0+No1EMa86+puZuNlCb4cNryHw2PY2Xiw/y2dz/WWdeJQp74Y2UnNXPkuLiYpvn+A==",
+      "path": "rabbitmq.client/6.2.2",
+      "hashPath": "rabbitmq.client.6.2.2.nupkg.sha512"
+    },
     "StackExchange.Redis/2.8.31": {
       "type": "package",
       "serviceable": true,
@@ -951,6 +973,13 @@
       "sha512": "sha512-qEePWsaq9LoEEIqhbGe6D5J8c9IqQOUuTzzV6wn1POlfdLkJliZY3OlB0j0f17uMWlqZYjH7txj+2YbyrIA8Yg==",
       "path": "system.io.pipelines/5.0.1",
       "hashPath": "system.io.pipelines.5.0.1.nupkg.sha512"
+    },
+    "System.Memory/4.5.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-1MbJTHS1lZ4bS4FmsJjnuGJOu88ZzTT2rLvrhW7Ygic+pC0NWA+3hgAen0HRdsocuQXCkUTdFn9yHJJhsijDXw==",
+      "path": "system.memory/4.5.4",
+      "hashPath": "system.memory.4.5.4.nupkg.sha512"
     },
     "System.Reflection/4.3.0": {
       "type": "package",
@@ -1042,6 +1071,13 @@
       "sha512": "sha512-aeu4FlaUTemuT1qOd1MyU4T516QR4Fy+9yDbwWMPHOHy7U8FD6SgTzdZFO7gHcfAPHtECqInbwklVvUK4RHcNg==",
       "path": "system.text.encoding.codepages/4.7.0",
       "hashPath": "system.text.encoding.codepages.4.7.0.nupkg.sha512"
+    },
+    "System.Threading.Channels/4.7.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-6akRtHK/wab3246t4p5v3HQrtQk8LboOt5T4dtpNgsp3zvDeM4/Gx8V12t0h+c/W9/enUrilk8n6EQqdQorZAA==",
+      "path": "system.threading.channels/4.7.1",
+      "hashPath": "system.threading.channels.4.7.1.nupkg.sha512"
     },
     "System.Threading.Tasks/4.3.0": {
       "type": "package",

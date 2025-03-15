@@ -16,12 +16,14 @@ namespace AddressBookApp.Controllers
         private readonly IAddressBookBL _addressBookBL;
         private readonly IMapper _mapper;
         private readonly IValidator<AddressBookDTO> _validator;
+        private readonly RabbitMQService rabbitMQService;
 
-        public AddressBookAppController(IAddressBookBL addressBookBL, IMapper mapper, IValidator<AddressBookDTO> validator)
+        public AddressBookAppController(IAddressBookBL addressBookBL, IMapper mapper, IValidator<AddressBookDTO> validator, RabbitMQService rabbitMQService)
         {
             _addressBookBL = addressBookBL;
             _mapper = mapper;
             _validator = validator;
+            this.rabbitMQService = rabbitMQService;
         }
 
         // GET: Fetch all contacts
@@ -56,6 +58,8 @@ namespace AddressBookApp.Controllers
             var contactEntity = _mapper.Map<AddressBookEntity>(contactDTO);
             var createdContact = _addressBookBL.AddContact(contactEntity);
             var createdContactDTO = _mapper.Map<AddressBookDTO>(createdContact);
+            // ? Publish event to RabbitMQ
+            rabbitMQService.PublishMessage("contact.added", createdContact);
 
             return CreatedAtAction(nameof(GetContactById), new { id = createdContactDTO.Id }, createdContactDTO);
         }

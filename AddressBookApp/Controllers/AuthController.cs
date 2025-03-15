@@ -1,4 +1,5 @@
 ﻿using Business_Layer.Interface;
+using Business_Layer.Service;
 using Microsoft.AspNetCore.Mvc;
 using Model_Layer.DTO;
 using Repository_Layer.Service;
@@ -9,11 +10,13 @@ public class AuthController : ControllerBase
 {
     private readonly IAddressBookBL _addressBookBL;
     private readonly RedisCacheService redisCache;
+    private readonly RabbitMQService rabbitMQService;
 
-    public AuthController(IAddressBookBL _addressBookBL, RedisCacheService redisCache)
+    public AuthController(IAddressBookBL _addressBookBL, RedisCacheService redisCache, RabbitMQService rabbitMQService)
     {
         this._addressBookBL = _addressBookBL;
         this.redisCache = redisCache;
+        this.rabbitMQService= rabbitMQService;
     }
 
     [HttpPost("register")]
@@ -22,6 +25,7 @@ public class AuthController : ControllerBase
         var result = _addressBookBL.Register(userDto);
         if (result == "User already exists")
             return BadRequest(new { message = result });
+        rabbitMQService.PublishMessage("user.registered", result);
 
         return Ok(new { message = result });
     }
