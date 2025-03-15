@@ -18,7 +18,11 @@ public class AuthController : ControllerBase
         this.redisCache = redisCache;
         this.rabbitMQService= rabbitMQService;
     }
-
+    /// <summary>
+    /// This api is used to register a new user in the database
+    /// </summary>
+    /// <param name="userDto"></param>
+    /// <returns></returns>
     [HttpPost("register")]
     public IActionResult Register(UserDTO userDto)
     {
@@ -29,7 +33,11 @@ public class AuthController : ControllerBase
 
         return Ok(new { message = result });
     }
-
+    /// <summary>
+    /// This api is used to login the registered user 
+    /// </summary>
+    /// <param name="userDto"></param>
+    /// <returns></returns>
     [HttpPost("login")]
     public IActionResult Login(UserDTO userDto)
     {
@@ -39,13 +47,22 @@ public class AuthController : ControllerBase
 
         return Ok(new { token });
     }
-
+    /// <summary>
+    /// This api is used to send forgot password token to email
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns></returns>
     [HttpPost("forgot-password")]
     public IActionResult ForgotPassword([FromBody] ForgotPasswordDTO request)
     {
         var result = _addressBookBL.ForgotPassword(request.Email);
         return result == "User not found" ? NotFound(new { message = result }) : Ok(new { message = result });
     }
+    /// <summary>
+    /// This api is used to reset the forgotten password
+    /// </summary>
+    /// <param name="resetPasswordDto"></param>
+    /// <returns></returns>
 
     [HttpPost("reset-password")]
     public IActionResult ResetPassword([FromBody] ResetPasswordDTO resetPasswordDto)

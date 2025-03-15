@@ -148,7 +148,7 @@ namespace Repository_Layer.Service
 
                 addressBookDbContext.SaveChanges();
             }
-            return existingContact;
+            return updatedContact;
         }
 
 

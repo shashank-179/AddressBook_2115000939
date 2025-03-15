@@ -27,6 +27,10 @@ namespace AddressBookApp.Controllers
         }
 
         // GET: Fetch all contacts
+        /// <summary>
+        /// This api is used to fetch all the contacts in the address book
+        /// </summary>
+        /// <returns>Details of all contacts in the database<returns>
         [HttpGet]
         public ActionResult<List<AddressBookEntity>> GetAllContacts()
         {
@@ -34,6 +38,11 @@ namespace AddressBookApp.Controllers
         }
 
         // GET: Get contact by ID
+        /// <summary>
+        /// This api is used to return the contact details based on what id we provide
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>Contact details</returns>
         [HttpGet("{id}")]
         public ActionResult<AddressBookEntity> GetContactById(int id)
         {
@@ -46,6 +55,11 @@ namespace AddressBookApp.Controllers
         }
 
         // POST: Add a new contact
+        /// <summary>
+        /// This api is used to add a new contact in address book
+        /// </summary>
+        /// <param name="contactDTO"></param>
+        /// <returns>Contact details of added user</returns>
         [HttpPost]
         public ActionResult<AddressBookDTO> AddContact([FromBody] AddressBookDTO contactDTO)
         {
@@ -65,6 +79,12 @@ namespace AddressBookApp.Controllers
         }
 
         // PUT: Update contact
+        /// <summary>
+        /// This api updates the existing user based on what id we provide
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="contact"></param>
+        /// <returns>Updated contact details</returns>
         [HttpPut("{id}")]
         public ActionResult<AddressBookEntity> UpdateContact(int id, [FromBody] AddressBookEntity contact)
         {
@@ -77,6 +97,11 @@ namespace AddressBookApp.Controllers
         }
 
         // DELETE: Delete contact
+        /// <summary>
+        /// This api deletes the contact whose id is provided
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>True or false</returns>
         [HttpDelete("{id}")]
         public ActionResult DeleteContact(int id)
         {

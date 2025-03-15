@@ -10,6 +10,7 @@ using FluentValidation.AspNetCore;
 using Business_Layer.Validation;
 using FluentValidation;
 using Microsoft.OpenApi.Models;
+using System.Reflection;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -69,6 +70,9 @@ builder.Services.AddSwaggerGen(options =>
             Array.Empty<string>()
         }
     });
+    // Enable XML comments
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, $"{Assembly.GetExecutingAssembly().GetName().Name}.xml");
+    options.IncludeXmlComments(xmlPath);
 });
 
 
